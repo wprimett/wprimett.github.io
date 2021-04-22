@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head><script src='maxiLib.js'></script>
+	<meta charset="utf-8">
+</head>
+<body>
+	<h1>Granular Synthesis and Envelopes</h1>
+	<p>This example demonstrates granular synthesis (pitch stretch) on a percussion sample and an envelope on an oscillator mixing both into 2 channels.</p>
+</body>
+<script>
+	// Variable declarations.
+    var audio = new maximJs.maxiAudio();
+
+
+    var sample = new maximJs.maxiSample();
+    var stretch = new maximJs.maxiPitchStretch();
+    var grainsSet = false;
+
+    var myCounter = new maximJs.maxiOsc();
+    var myOsc = new maximJs.maxiOsc();
+
+    var myOscOut, myEnvOut;
+
+
+    var myOutputs = new maximJs.maxiMix();
+
+    var myEnvelope = new maximJs.maxiEnv();
+
+	// Initialising the audio engine.
+	function firstFunction(_callback){
+		// audio.init()
+		// var audioplayer = new Audio('NINAJIRACHI_percussion_one_shot_bounce.wav');
+		// audioplayer.play();
+		_callback();
+	};
+
+	document.onclick = function(){
+		firstFunction(() => console.log('huzzah, I\'m done!'))
+		audio.init();
+		var audioplayer = new Audio('NINAJIRACHI_percussion_one_shot_bounce.wav');
+		audioplayer.play();
+	}
+
+	audio.init();
+
+
+	// Setting the envelope settings for the oscillator. A long attack, a very short decay and sustain and a very long release.
+    myEnvelope.setAttack(500);
+    myEnvelope.setDecay(1);
+    myEnvelope.setSustain(1);
+    myEnvelope.setRelease(1000);
+
+
+
+    // Loading the sample into a maxiSample object.
+    audio.loadSample("NINAJIRACHI_percussion_one_shot_bounce.wav", sample);
+
+
+
+    // As we have more than one output we need multi channel sound. Therefore, we set outputIsArray as true and the number of channels to 2.
+    audio.outputIsArray(true, 2);
+
+
+
+    // The main audio function.
+    audio.play = function(){
+
+    // The envelope output. The input is 1.0 so we can apply to the oscillator later in the process.
+
+    myEnvOut = myEnvelope.adsr(1.0, myEnvelope.trigger);
+
+    var Count = Math.round(myCounter.phasor(0.5,1,9));
+
+
+    if (Count == 1) {
+        // When the counter is equal to 1, the envelope will trigger.
+        myEnvelope.trigger = 1;
+    } else {
+        // This releases the envelope after its been triggered so that the output will fade away.
+        myEnvelope.trigger = 0;
+    }
+
+    // Setting the oscillator output as the saw wave of 220Hz.
+    myOscOut = myOsc.saw(220);
+
+
+	// Checking whether the sample is loaded and ready to play.
+	if(sample.isReady()){
+        if(!grainsSet){
+	        stretch.setSample(sample);
+    	    grainsSet = true;
+        }
+
+        // Outputting the pitch streched sample to channel 1.
+        this.output[0] = stretch.play(0.5, 0.1 ,0.1, 1.5, 0);
+				this.output[1] = this.output[0];
+
+        // Outputting the combination the oscillator and the envelope.
+        // this.output[1] = myOscOut * myEnvOut;
+    }
+};
+
+    // The envelope part of this example was in part, aided by the example given at: https://maxilib-reference.github.io/MaxiLib-Reference/
+
+</script>
+</html>

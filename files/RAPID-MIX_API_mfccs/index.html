@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+<head><script src='maxiLib.js'></script>
+	<meta charset="utf-8">
+	<title>rapid-mix api mfccs</title>
+	<style>
+	 html {
+	        font-family: sans-serif;
+            background-color: #eee8d5;
+            color: #657b83;
+            margin: 1em;
+        }
+	     body {
+        height: 100%;
+        font-family: verdana;
+        color: #073642;
+    }
+	    h3 {
+            color: #859900;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+    #canvas-container {
+        width: 100%;
+        text-align:left;
+    }
+    canvas {
+		background: rgb(54, 75, 85);
+		border: 10px;
+		margin: 1em;
+	}
+	</style>
+</head>
+<body>
+    <div id="canvas-container">
+    <canvas></canvas>
+    </div>
+    <h3>First, train some silence (class 0).</h3>
+    <h3>Next, train with these:</h3>
+    <iframe width="280" height="157" src="https://www.youtube.com/embed/dtiSA2RKDzc" frameborder="0" allowfullscreen></iframe>
+    <iframe width="280" height="157" src="https://www.youtube.com/embed/V8vbhXK-u_g" frameborder="0" allowfullscreen></iframe>
+    <h3>Test with these:</h3>
+    <iframe width="280" height="157" src="https://www.youtube.com/embed/HnvSfW2xjMI" frameborder="0" allowfullscreen></iframe>
+    <iframe width="280" height="157" src="https://www.youtube.com/embed/epRXoS_P0lk" frameborder="0" allowfullscreen></iframe>
+</body>
+<script src="https://www.doc.gold.ac.uk/eavi/rapidmix/RapidLib.js"></script>
+<script>
+
+/* globals Module */
+
+///////////Audio Input
+
+  var audioContext = new AudioContext();
+
+// One-liner to resume playback when user interacted with the page.
+document.addEventListener('click', function() {
+  audioContext.resume().then(() => {
+    console.log('Playback resumed successfully');
+  });
+});
+
+    var analyser = audioContext.createAnalyser();
+    var gain = audioContext.createGain();
+    gain.gain.value = 0.0;
+    analyser.fftSize = 512;
+    var bufferLength = analyser.frequencyBinCount;
+    var dataArray = new Float32Array(bufferLength);
+
+	if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({
+                video: false,
+                audio: true
+            })
+            .then(
+			    function (localMediaStream) {
+                    var audioStream = audioContext.createMediaStreamSource(localMediaStream);
+                    audioStream.connect(analyser);
+                    analyser.connect(gain);
+                    gain.connect(audioContext.destination);
+                })
+            .catch(
+			    function (error) {
+                    console.log("The following error occured: " + error);
+                });
+        } else {
+            alert("getUserMedia not supported by your web browser or Operating system version");
+        }
+
+////////////////////////////////////RAPID API
+
+    var rapidLib = window.RapidLib();
+    var kNN = new rapidLib.Classification();
+    var myTrainingSet = [];
+
+    var trained = false;
+    function trainMe() {
+        console.log('classification trained: ', kNN.train(myTrainingSet));
+        trained = true;
+    }
+
+    var classificationOutput;
+    function process(input) {
+        classificationOutput = kNN.run(input);
+    }
+
+    var classOutput = 0;
+    var recordingTrigger = false;
+    var recordingCounter = 0;
+
+/////////////////////////Controls
+
+ window.addEventListener('keydown',this.check,false);
+    function check(e) {
+        if (e.keyCode >= 48 && e.keyCode < 58) {
+            classOutput = e.keyCode - 48;
+            recordingTrigger = true;
+        }
+    }
+
+/////////////////////////Maxi Audio & Drawing
+
+	var fft = new maximJs.maxiFFT();
+	var fftSize = bufferLength;
+    fft.setup(fftSize, fftSize, 256);
+
+    var mfcc = new maximJs.maxiMFCC();
+
+    var numCoeffs = 13;
+	mfcc.setup(fftSize, 42, numCoeffs, 20, 20000, 44100);
+
+	var mfccs = new Module.VectorDouble();
+
+    for(var i = 0; i < 13; ++i){
+        mfccs.push_back(0);
+    }
+
+    var canvas = document.querySelector("canvas");
+    canvas.width = 640;
+    canvas.height = 240;
+    var context = canvas.getContext("2d");
+    var height = canvas.height;
+    var width = canvas.width;
+
+    var outputBuffer = [0, 0, 0, 0, 0];
+    var bufferIndex = 0;
+    var lowPasser = new rapidLib.StreamBuffer(25);
+
+    function lowPass(newOutput) {
+        lowPasser.push(newOutput);
+        return Math.round(lowPasser.mean());
+    }
+
+
+    function draw() {
+        analyser.getFloatTimeDomainData(dataArray);
+
+        context.clearRect(0,0, canvas.width, canvas.height);
+        context.fillStyle = "#18dc5e";
+        context.font="18px Verdana";
+        context.strokeStyle = "#FF9d75";
+        context.beginPath();
+        context.moveTo(0,0);
+        context.fillText("mfcc", 40, 20);
+        for (var i = 0; i < bufferLength; ++i) {
+            if (fft.process(dataArray[i] * 1)) {
+			    fft.magsToDB();
+    	        mfcc.mfcc(fft.magnitudes, mfccs);
+            }
+        }
+        var mfccWidth = 39;
+        var rapidInput = [13];
+        for (var i = 0; i < numCoeffs; ++i) {
+            context.rect(40 + (mfccWidth * i), 120, mfccWidth, -20 * mfccs.get(i));
+            rapidInput[i] = mfccs.get(i);
+        }
+        context.fillText("Press a number key to record examples of a class.", 40, 200);
+
+        if (recordingTrigger) {
+            context.fillText("recording class " + classOutput + " (" + recordingCounter + ")", 40, 220);
+        } else if (trained === true) {
+            context.fillText("identified class " + lowPass(kNN.run(rapidInput)[0]), 40, 220);
+        }
+
+        context.fill();
+        context.stroke();
+
+        if (recordingTrigger) {
+              if (++recordingCounter > 50) {
+                recordingTrigger = false;
+                trainMe();
+                recordingCounter = 0;
+            } else {
+                var rapidOutput = [classOutput];
+                myTrainingSet.push({
+                    input: rapidInput,
+                    output: rapidOutput
+                });
+            }
+
+        }
+        window.requestAnimationFrame(draw);
+    }
+    window.requestAnimationFrame(draw);
+
+</script>
+</html>
