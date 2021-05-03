@@ -33,7 +33,7 @@ body { background-color: #fff; color: #222;	font: 14px/20px "HelveticaNeue-Light
 body a {	color: #809fff; }
 
 header { width: 100%; margin: 0 auto; position: relative; padding: 20px 0; margin-bottom: 20px; }
-.logo { font-size: 28px; color: #333; }
+.logo { font-size: 28px; color: #BBB; }
 
 nav ul { margin: 0; }
 nav ul li { display: inline; margin-right: 20px; font-size: 16px; line-height: 28px; color: #333; }
