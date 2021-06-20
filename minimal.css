@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;1,200&display=swap');
 /*
 	Minimal CSS
 	minimalcss.com
@@ -28,7 +30,10 @@ a {
 * { margin: 0; padding: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 
 /* Layout */
-body { background-color: #fff; color: #222;	font: 14px/20px "HelveticaNeue-Light", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+/* body { background-color: #fff; color: #222;	font: 14px/20px "Open Sans" "HelveticaNeue-Light", "HelveticaNeue", sans-serif, Helvetica, Arial, sans-serif; } */
+body { background-color: #fff; color: #222;	font: 14px/20px "Raleway", sans-serif; }
+
+i {font-style: italic;}
 
 body a {	color: #809fff; }
 
@@ -57,7 +62,7 @@ footer ul li { display:inline; list-style:none; padding-left:20px; }
 .col-3  { width: 23.5%; }
 .col-4  { width: 32%; }
 .col-5  { width: 40%; }
-.col-6  { width: 100%; }
+.col-6  { width: 100%; color: #BBB;}
 .col-7  { width: 56.5%; }
 .col-8  { width: 66%; }
 .col-9  { width: 74%; }
@@ -127,7 +132,7 @@ tfoot { font-style: italic; }
 
 @media (prefers-color-scheme: dark) {
   body {
-    color: #eee;
+    color: #AAA;
     background: #121212;
   }
 
