@@ -32,7 +32,7 @@ function draw() {
       let x = (col * 3) + (col*width/(interval*1.1)) + width/padding
       let y = (row) * (height/interval) + height / padding
       fill(100, 255)
-      rect(x, y, 3, 3);
+      rect(x, y, 3, 8);
     }
 //   final block
     let finalDeath = totalDeaths
@@ -41,5 +41,5 @@ function draw() {
     let x = (col * 3) + (col*width/(interval*1.1)) + width/padding
     let y = (row) * (height/interval) + height / padding
     fill(222,0,0, millisecond%2000)
-    rect(x, y, 3, 3);
+    rect(x, y, 3, 9);
 }
