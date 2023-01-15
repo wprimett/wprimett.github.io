@@ -1,12 +1,12 @@
 const rate = 800;
 
 function setup() {
-	  createCanvas(720, 720);
+	  createCanvas(500, 500);
     noStroke()
 }
 
 function draw() {
-    let interval = 50;
+    let interval = 500 / 10;
     let padding = interval * 2;
 	background(240);
     var currentYear = year();
