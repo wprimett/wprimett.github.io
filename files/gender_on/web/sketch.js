@@ -29,7 +29,7 @@ function draw() {
     for(let i = 0; i < totalDeaths; i++){
       const row = parseInt(i/interval);
       const col = i%interval;
-      let x = (col * 3) + (col*width/50) + width/padding
+      let x = (col * 3) + (col*width/(interval*1.1)) + width/padding
       let y = (row) * (height/interval) + height / padding
       fill(100, 255)
       rect(x, y, 3, 3);
@@ -38,7 +38,7 @@ function draw() {
     let finalDeath = totalDeaths
     const row = parseInt(finalDeath/interval);
     const col = finalDeath%interval;
-    let x = (col * 3) + (col*width/50) + width/padding
+    let x = (col * 3) + (col*width/(interval*1.1)) + width/padding
     let y = (row) * (height/interval) + height / padding
     fill(222,0,0, millisecond%2000)
     rect(x, y, 3, 3);
