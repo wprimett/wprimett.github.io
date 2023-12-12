@@ -100,7 +100,7 @@
 								<span class="mdl-layout-title"></span>
 	            	<nav class="mdl-navigation">
 
-						<ul class="demo-list-control mdl-list">
+						<!-- <ul class="demo-list-control mdl-list">
 							<li class="mdl-list__item">
 								<span class="mdl-list__item-primary-content">
 								PAF Heatmap
@@ -111,10 +111,10 @@
 									</label>
 								</span>
 							</li>
-						</ul>
+						</ul> -->
 					</nav>
 
-							<li class="mdl-list__item">
+							<!-- <li class="mdl-list__item">
 								<span class="mdl-list__item-primary-content">
 								Raw Video
 								</span>
@@ -123,7 +123,7 @@
 										<input type="radio" id="feature-list-option-1" class="mdl-radio__button" name="options" value="mfcc" oninput="updateGraph()" onchange="updateGraph()"  />
 									</label>
 								</span>
-							</li>
+							</li> -->
 						<hr>
 
 					<nav class="mdl-navigation">
@@ -204,6 +204,7 @@
 			lineOut.volume = 0.4;
 
 			var data = JSON.parse(d);
+			// console.log(data)
 
 			function getData(method, feature, a, b) {
 				var key;
@@ -315,6 +316,7 @@
 				}
 
 				let targetData = getData(method, "mfcc", slider1, slider2);
+				// console.log(targetData)
 				target = generatePositionsFromData(targetData);
 				interpolating = true;
 				interpolatingAmount = 0;
@@ -326,7 +328,7 @@
 				for (var i = 0; i < data.length; ++i) {
 					let x = data[i]['coordinates'][0] - 0.5;
 					let y = data[i]['coordinates'][1] - 0.5;
-					let z = data[i]['coordinates'][2] * depth;
+					let z = 1 * depth;
 
 					positions[3 * i] = x;
 					positions[3 * i + 1] = y;
@@ -546,7 +548,7 @@
 
 					if (previousSampleIndex != intersection.index) {
 						let filepath = filePaths[intersection.index];
-						let performerName = performerNames[intersection.index];
+						// let performerName = performerNames[intersection.index];
 						previousSampleIndex = intersection.index;
 
 						var videoFile = filepath + ".mp4";
