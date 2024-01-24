@@ -487,6 +487,8 @@
 						filepath = filepath + ".mp3"
 						// load a sound and play it immediatly
 						let file = "speech_samples/" + filepath;
+						// GLITCH ME ASSETS
+						// let file = "https://cdn.glitch.global/47a41395-13a6-4a95-bc65-0c24036502d8/" + filepath
 					    WebAudiox.loadBuffer(context, file, function(buffer){
 					        // init AudioBufferSourceNode
 					        var source  = context.createBufferSource();
