@@ -1,0 +1,12 @@
+./s6_SHE_concatenated.mp4
+./s3_SHE_concatenated.mp4
+./s4_HE_concatenated.mp4
+./s2_SHE_concatenated.mp4
+./s5_HE_concatenated.mp4
+./s6_HE_concatenated.mp4
+./s1_HE_concatenated.mp4
+./s3_HE_concatenated.mp4
+./s2_HE_concatenated.mp4
+./s1_SHE_concatenated.mp4
+./s4_SHE_concatenated.mp4
+./s5_SHE_concatenated.mp4

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>CIM C2 Sensor Data Synced</title>
+	<style>
+	.controller + video {
+		height: 252px;
+		/* left: -90px; */
+		/* top: -115px; */
+		/* border: 1px solid black; */
+		/* position: relative; */
+	}
+	li
+	{
+		display:block;
+		float:left;
+		width:300px; /* adjust */
+		height:150px; /* adjust */
+		padding: 0px; /*adjust*/
+	}
+	video {
+		width: 1000px;
+		height: 100px;
+		display: block;
+	}
+	.graphs{
+	}
+	.controller{
+		width: 1000px;
+		height: auto;
+	}
+	body{
+		background-color: #36393e
+	}
+	.switch-container {
+	  display: flex;
+	  /* justify-content: center; /* Centers the switches horizontally */ */
+	  /* align-items: center;     /* Vertically align the switches */ */
+	  gap: 20px;               /* Adds space between the switches */
+	}
+	.switch {
+	  position: relative;
+	  display: inline-block;
+	  width: 60px;
+	  height: 10px;
+		margin-left: 20px;
+		margin-right: 20px;
+	}
+
+	.switch input {
+	  opacity: 0;
+	  width: 0;
+	  height: 0;
+	}
+
+	.slider {
+	  position: absolute;
+	  cursor: pointer;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  background-color: #ccc;
+	  -webkit-transition: .4s;
+	  transition: .4s;
+	}
+
+	.slider:before {
+	  position: absolute;
+	  content: "";
+	  height: 10px;
+	  width: 26px;
+	  left: 4px;
+	  bottom: 1px;
+	  background-color: white;
+	  -webkit-transition: .4s;
+	  transition: .4s;
+	}
+
+	input:checked + .slider {
+	  background-color: #2196F3;
+	}
+
+	input:focus + .slider {
+	  box-shadow: 0 0 1px #2196F3;
+	}
+
+	input:checked + .slider:before {
+	  -webkit-transform: translateX(26px);
+	  -ms-transform: translateX(26px);
+	  transform: translateX(26px);
+	}
+
+	/* Text labels */
+	.label-text {
+	  display: block;
+	  margin-bottom: 5px;
+	  font-family: Verdana, Arial, sans-serif;
+	  font-size: 14px;
+		color: #FFF
+	}
+	</style>
+	<!-- <script src="http://code.jquery.com/jquery-git.js"></script>
+	<script src="https://getfirebug.com/firebug-lite-debug.js"></script> -->
+	<script src="../src/mediagroup.js"></script>
+</head>
+<body>
+	<div class="switch-container">
+		<select id="myDropdown" style="margin-right: 20px;"></select>
+		<span class="label-text">ECG (Cardiogram)</span><label class="switch"><input type="checkbox" checked onclick="toggleImage('videoPlayer_row_2', this)"><span class="slider"></span></label>
+		<span class="label-text">PPG (Pulse)</span><label class="switch"><input type="checkbox" checked onclick="toggleImage('videoPlayer_row_3', this)"><span class="slider"></span></label>
+		<span class="label-text">ACC (Velocity)</span><label class="switch"><input type="checkbox" checked onclick="toggleImage('videoPlayer_row_4', this)"><span class="slider"></span></label>
+		<span class="label-text">GYRO (Rotation)</span><label class="switch"><input type="checkbox" checked onclick="toggleImage('videoPlayer_row_5', this)"><span class="slider"></span></label>
+	</div>
+	<ul>
+		<li>
+			<video id="videoPlayer" class="controller" controls mediagroup="pip">
+				<source id="videoSource" src="assets/Merged_Takes/DP_1/1_She_Takes_Before_Interview.webm"></source>
+			</video>
+
+			<video id="videoPlayer_row_2" class="graphs" mediagroup="pip">
+				<source  id="videoSource_row_2" src="assets/ECG/s1_SHE_concatenated.webm"></source>
+			</video>
+
+			<!-- <video id="videoPlayer_row_3" mediagroup="pip">
+				<source src="assets/ECG/s1_SHE_concatenated_optimized.mp4"></source>
+			</video>
+
+			<video id="videoPlayer_row_4" mediagroup="pip">
+				<source src="assets/ECG/s1_SHE_concatenated_optimized.mp4"></source>
+			</video>
+
+			<video id="videoPlayer_row_5" mediagroup="pip">
+				<source src="assets/ECG/s1_SHE_concatenated_optimized.mp4"></source>
+			</video> -->
+
+		</li>
+	</ul>
+
+</body>
+<script>
+// Array of strings
+const sessions = ['s1_SHE', 's1_HE', 's2_HE', 's2_SHE', 's3_SHE', 's3_HE', 's4_HE', 's4_SHE', 's5_SHE', 's5_HE', 's6_HE', 's6_SHE']
+// const sessions = ['s1_SHE', 's1_HE', 's2_HE', 's2_SHE', 's3_SHE', 's3_HE']
+
+const sessionVideoDir = "assets/Merged_Takes/"
+var sessionVideoFiles = ["DP_1/1_She_Takes_Before_Interview.webm", "DP_1/2_He_Takes_After_Interview.webm",
+	"DP_2/1_He_Takes_Before_Interview.webm", "DP_2/2_She_Takes_After_Interview.webm",
+	"DP_3/1_She_Takes_Before_Interview.webm", "DP_3/2_He_Takes_After_Interview.webm",
+	"DP_4/1_He_Takes_Before_Interview.mp4", "DP_4/2_She_Takes_After_Interview.mp4",
+	"DP_5/1_She_Takes_Before_Interview-1.mp4", "DP_5/2_He_Takes_After_Interview-1.mp4",
+	"DP_6/1_He_Takes_Before_Interview-1.mp4", "DP_6/2_She_Takes_After_Interview-1.mp4",
+]
+
+// sessionVideoFiles = sessionVideoFiles.map(file => file.replace(/\.[^/.]+$/, `.webm`));
+
+// Array of video filenames
+const sensorVideoDir = "assets/ECG/"
+var sensorVideoFiles = ['s1_SHE_concatenated_optimized.webm',
+ 's1_HE_concatenated.webm',
+ 's2_HE_concatenated.webm',
+ 's2_SHE_concatenated.webm',
+ 's3_SHE_concatenated.webm',
+ 's3_HE_concatenated.webm',
+ 's4_HE_concatenated.webm',
+ 's4_SHE_concatenated.webm',
+ 's5_SHE_concatenated.webm',
+ 's5_HE_concatenated.webm',
+ 's6_HE_concatenated.webm',
+ 's6_SHE_concatenated.webm']
+
+ // sensorVideoFiles = sessionVideoFiles.map(file => file.replace(/\.[^/.]+$/, `.webm`));
+
+// Create an array of video objects dynamically from the file names
+const videoFiles = sessions.map((session, index) => ({
+		name: session,
+		index: index,
+		file1: sessionVideoDir + sessionVideoFiles[index],
+		file2: sensorVideoDir + sensorVideoFiles[index] // Use the file name as the file path
+}));
+
+
+// Get references to the dropdown and video player
+// const dropdown = document.getElementById("videoDropdown");
+const videoPlayer = document.getElementById("videoPlayer");
+const videoSource = document.getElementById("videoSource");
+// Get the select element
+const dropdown = document.getElementById("myDropdown");
+
+// Populate the dropdown with video options
+videoFiles.forEach(video => {
+		const option = document.createElement("option");
+		option.value = [video.name,video.index,video.file1,video.file2]; // Set the file name as the value
+		console.log(typeof option.value)
+
+		option.textContent = video.name; // Set the visible name
+		dropdown.appendChild(option);
+});
+
+// Handle dropdown selection
+dropdown.addEventListener("change", (event) => {
+		var selectedFile = event.target.value.split(","); // Get the selected file
+		console.log(selectedFile)
+		videoSource.src = selectedFile[2]; // Update the video source
+		videoPlayer.load(); // Reload the video player
+
+		videoSource_row_2.src = selectedFile[3]; // Update the video source
+		videoPlayer_row_2.load(); // Reload the video player
+});
+
+function toggleImage(videoId, button) {
+		console.log(button.innerHTML)
+    const video = document.getElementById(videoId);
+    if (video.style.display === 'none') {
+        video.style.display = 'block';
+    } else {
+        video.style.display = 'none';
+    }
+}
+
+</script>
+</html>

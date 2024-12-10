@@ -1,0 +1,6 @@
+./DP_1/1_She_Takes_Before_Interview.mp4
+./DP_1/2_He_Takes_After_Interview.mp4
+./DP_2/1_He_Takes_Before_Interview.mp4
+./DP_2/2_She_Takes_After_Interview.mp4
+./DP_3/1_She_Takes_Before_Interview.mp4
+./DP_3/2_He_Takes_After_Interview.mp4
