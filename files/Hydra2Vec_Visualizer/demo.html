@@ -1,0 +1,596 @@
+<!-- Code adapted from Leon Fedden's umap_tsne_embedding_visualiser -->
+<!-- https://github.com/fedden/umap_tsne_embedding_visualiser -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Hydra2Vec Visualizer</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #ffffff;
+				background-color: #ffffff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				position: absolute;
+				top: 0px;
+				width: 100%;
+				padding: 5px;
+				font-family: Monospace;
+				font-size: 13px;
+				text-align: center;
+				font-weight: bold;
+			}
+			a {
+				color: #fff;
+			}
+
+			video {
+				padding-top: 25%;
+			}
+			#indent{
+				margin-left: 100px;
+			}
+			.mdl-layout__header{
+				color: red;
+			}
+		</style>
+
+		<!-- List items with avatar and action -->
+		<style>
+			.demo-list-control {
+			    width: 230px;
+			}
+
+			.demo-list-radio {
+			    display: inline;
+			}
+
+		</style>
+	</head>
+
+
+
+
+	<body>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-deep_orange.min.css" />
+		<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="js/THREEx.KeyboardState.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<!-- <script src="//rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script> -->
+
+		<!-- The drawer is always open in large screens. The header is always shown,
+		  even in small screens. -->
+			<style>
+			.mdl-layout__header{
+				background-color: DarkSlateGray;
+			}
+		</style>
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+            		mdl-layout--fixed-header">
+            <header class="mdl-layout__header"><div id="indent">	Press 'c' to re-centre camera </div>
+                <div id='header' class="mdl-layout__header-row">
+									<video id ="myVideo" autoplay style="display:none" width="320" height="240" controls>
+										<source src="" type="video/mp4">
+									Your browser does not support the video tag.
+									</video>
+                    <div class="mdl-layout-spacer"></div>
+					<nav class="mdl-navigation">
+						<h6 id="filename"></h6>
+					</nav>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+                                mdl-textfield--floating-label mdl-textfield--align-right">
+
+	                    <div class="mdl-textfield__expandable-holder">
+	                        <input class="mdl-textfield__input" type="text" name="sample"
+	                                  id="fixed-header-drawer-exp">
+	                    </div>
+                    </div>
+                </div>
+			</header>
+		        <div class="mdl-layout__drawer" id='drawer'>
+		            <span class="mdl-layout-title">Hydra2Vec Map</span>
+								<span class="mdl-layout-title"></span>
+	            	<nav class="mdl-navigation">
+
+						<!-- <ul class="demo-list-control mdl-list">
+							<li class="mdl-list__item">
+								<span class="mdl-list__item-primary-content">
+								PAF Heatmap
+								</span>
+								<span class="mdl-list__item-secondary-action">
+									<label class="demo-list-radio mdl-radio mdl-js-radio mdl-js-ripple-effect" for="feature-list-option-2">
+										<input type="radio" id="feature-list-option-2" class="mdl-radio__button" name="options" value="wavenet" oninput="updateGraph()" onchange="updateGraph()" checked />
+									</label>
+								</span>
+							</li>
+						</ul> -->
+					</nav>
+
+							<!-- <li class="mdl-list__item">
+								<span class="mdl-list__item-primary-content">
+								Raw Video
+								</span>
+								<span class="mdl-list__item-secondary-action">
+									<label class="demo-list-radio mdl-radio mdl-js-radio mdl-js-ripple-effect" for="feature-list-option-1">
+										<input type="radio" id="feature-list-option-1" class="mdl-radio__button" name="options" value="mfcc" oninput="updateGraph()" onchange="updateGraph()"  />
+									</label>
+								</span>
+							</li> -->
+						<hr>
+
+					<nav class="mdl-navigation">
+						<ul class="demo-list-control mdl-list">
+							<li class="mdl-list__item">
+								<span class="mdl-list__item-primary-content">
+									UMAP
+								</span>
+								<span class="mdl-list__item-secondary-action">
+									<label class="demo-list-radio mdl-radio mdl-js-radio mdl-js-ripple-effect" for="method-list-option-1">
+										<input type="radio" id="method-list-option-1" class="mdl-radio__button" name="methodoptions" value="umap" oninput="updateGraph()" onchange="updateGraph()" checked />
+									</label>
+								</span>
+							</li>
+
+							<li class="mdl-list__item">
+								<span class="mdl-list__item-primary-content">
+									t-SNE
+								</span>
+								<span class="mdl-list__item-secondary-action">
+									<label class="demo-list-radio mdl-radio mdl-js-radio mdl-js-ripple-effect" for="method-list-option-2">
+										<input type="radio" id="method-list-option-2" class="mdl-radio__button" name="methodoptions" value="tsne" oninput="updateGraph()" onchange="updateGraph()" />
+									</label>
+								</span>
+							</li>
+
+
+							<li class="mdl-list__item">
+								<span class="mdl-list__item-primary-content">
+									PCA
+								</span>
+								<span class="mdl-list__item-secondary-action">
+									<label class="demo-list-radio mdl-radio mdl-js-radio mdl-js-ripple-effect" for="method-list-option-3">
+										<input type="radio" id="method-list-option-3" class="mdl-radio__button" name="methodoptions" value="pca" oninput="updateGraph()" onchange="updateGraph()" />
+									</label>
+								</span>
+							</li>
+						</ul>
+
+						<div id="sliders">
+							<p style="width:230px">
+								<div class="mdl-card__supporting-text">
+									<p id="slider-text-1">Neighbours</p>
+								</div>
+								<input class="mdl-slider mdl-js-slider" type="range" id="slider1" min="1" max="5" step="1" oninput="updateGraph()" onchange="updateGraph()">
+								<div class="mdl-card__supporting-text">
+									<p id="slider-text-2">Distances</p>
+								</div>
+								<input class="mdl-slider mdl-js-slider" type="range" id="slider2" min="1" max="5" step="1" oninput="updateGraph()" onchange="updateGraph()">
+							</p>
+						</div>
+
+		            	<a class="mdl-navigation__link" href="https://medium.com/@LeonFedden/comparative-audio-analysis-with-wavenet-mfccs-umap-t-sne-and-pca-cb8237bfce2f">Original Version</a>
+		            	<a class="mdl-navigation__link" href="http://wprimett.github.io">My Projects</a>
+
+	            	</nav>
+		        </div>
+		    <main class="mdl-layout__content">
+			    <div class="page-content">
+
+					<!-- Your content goes here -->
+
+					<div id="container"></div>
+				</div>
+		    </main>
+		</div>
+
+		<script type="text/javascript" src="data.json"></script>
+		<script src='webaudiox.js'></script>
+
+		<script>
+
+			// create WebAudio API context
+			var context = new AudioContext()
+
+			// Create lineOut
+			var lineOut = new WebAudiox.LineOut(context)
+			lineOut.volume = 0.4;
+
+			var data = JSON.parse(d);
+			// console.log(data)
+
+			function getData(method, feature, a, b) {
+				var key;
+				if (method.toString() == "pca") {
+					key = method.toString() + feature.toString();
+				} else if (method.toString() == "tsne") {
+					key = method.toString() + feature.toString() + b.toString() + a.toString();
+				} else {
+					key = method.toString() + feature.toString() + a.toString() + b.toString();
+				}
+				return data[key];
+			}
+
+			var performerNames = data['performers'];
+			var performerColours = {
+				"/LMA_Quick_2/" : 0.1,
+				"/LMA_Quick/" : 0.1,
+				"/LMA_Sustained_2/" : 0.1,
+				"/LMA_Sustained/" : 0.1,
+				"/LMA_Strong_2/" : 0.1,
+				"/LMA_Light_2/" : 0.1,
+				"/LMA_Bound_2/" : 0.1,
+				"/LMA_Free_2/" : 0.1,
+				"/Connor_Voss/" : 0.15,
+				"/SplitSides_SoloA/" : 0.20,
+				"/SplitSides_SoloB/" : 0.20,
+				"/Belle_Beasley/" : 0.25,
+				"/Bethany_Cockburn" : 0.30,
+				"/Carollina_Bastos/" : 0.40,
+				"/Chloe_Misseldine_126/" : 0.50,
+				"/Diane_Saller/" : 0.65,
+				"/Haruhi_Otani/" : 0.65,
+				"/Movement_Qualities/" : 0.75,
+				"/The_Orchestrated_Body/" : 0.75,
+				"/Ronger_Teng_125/" : 0.85,
+				"/Shale_Wagman_407/" : 0.90,
+				"/Yuya_Mizushuma/" : 1.0
+			};
+			var videoType;
+			var filePaths = data['filenames'];
+
+			var renderer, scene, camera;
+			var controls;
+			var pointclouds;
+			var raycaster;
+			var mouse = new THREE.Vector2();
+			var intersection = null;
+			var spheres = [];
+			var spheresIndex = 0;
+			var clock;
+			var mouseHasMoved = false;
+			var sound = null;
+			var video, videoImage, videoImageContext, videoTexture;
+			var interpolating = false;
+			var interpolatingAmount = 0;
+			var interpolationSpeed = 0.01;
+			var target = null;
+			var previousSampleIndex = -1;
+			var threshold = 0.1;
+			var pointSize = 3;
+			var width = 150;
+			var length = 150;
+			var showVideo = true;
+
+			var drawerWidth = document.getElementById("drawer").clientWidth;
+			var titleHeight = document.getElementById("header").clientHeight;
+			var renderWidth = window.innerWidth - drawerWidth;
+			var renderHeight = window.innerHeight - titleHeight;
+			var keyboard = new THREEx.KeyboardState();
+
+			init();
+			animate();
+
+			function updateGraph() {
+				var slider1 = parseInt(document.getElementById("slider1").value) - 1;
+				var slider2 = parseInt(document.getElementById("slider2").value) - 1;
+
+				var method = null;
+				var methodOptions = document.getElementsByClassName('mdl-radio__button');
+				for (var i = 0; methodOptions[i]; ++i) {
+					let id = methodOptions[i].id.toString();
+					if (methodOptions[i].checked && (id.indexOf("method") != -1)) {
+						method = methodOptions[i].value;
+						break;
+					}
+				}
+
+				var feature = null;
+				var featureOptions = document.getElementsByClassName('mdl-radio__button');
+				for (var i = 0; featureOptions[i]; ++i) {
+					let id = featureOptions[i].id.toString();
+					if (featureOptions[i].checked && (id.indexOf("feature") != -1)) {
+						feature = featureOptions[i].value;
+						videoType = feature;
+						break;
+					}
+				}
+
+				if (method == "umap") {
+					document.getElementById("sliders").style.visibility = "visible";
+					document.getElementById("slider-text-1").innerHTML = "Neighbours";
+					document.getElementById("slider-text-2").innerHTML = "Distances";
+				} else if (method == "tsne") {
+					document.getElementById("sliders").style.visibility = "visible";
+					document.getElementById("slider-text-1").innerHTML = "Perplexity";
+					document.getElementById("slider-text-2").innerHTML = "Iterations";
+				} else if (method == "pca") {
+					document.getElementById("sliders").style.visibility = "hidden";
+				}
+
+				let targetData = getData(method, "mfcc", slider1, slider2);
+				// console.log(targetData)
+				target = generatePositionsFromData(targetData);
+				interpolating = true;
+				interpolatingAmount = 0;
+			}
+
+			function generatePositionsFromData(data) {
+				let depth = 10;
+				var positions = new Float32Array(data.length * 3);
+				for (var i = 0; i < data.length; ++i) {
+					let x = data[i]['coordinates'][0] - 0.5;
+					let y = data[i]['coordinates'][1] - 0.5;
+					let z = 1 * depth;
+
+					positions[3 * i] = x;
+					positions[3 * i + 1] = y;
+					positions[3 * i + 2] = z;
+				}
+
+				return positions;
+			}
+
+			function generatePointCloudGeometry(data) {
+				var geometry = new THREE.BufferGeometry();
+				var positions = generatePositionsFromData(data);
+
+				var colors = new Float32Array(data.length * 3);
+				var color = new THREE.Color(0xFFC0A2);
+				for (var i = 0; i < data.length; ++i) {
+						// color.setHSL(performerColours[performerNames[i]], .8, 0.6);
+
+						colors[3 * i] = color.r;
+						colors[3 * i + 1] = color.g;
+						colors[3 * i + 2] = color.b;
+				}
+
+				geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+				geometry.addAttribute('color', new THREE.BufferAttribute(colors, 3));
+				geometry.computeBoundingBox();
+
+				return geometry;
+			}
+
+			function generatePointcloud(data) {
+				var geometry = generatePointCloudGeometry(data);
+				var material = new THREE.PointsMaterial({
+					size: pointSize,
+					vertexColors: THREE.VertexColors,
+					sizeAttenuation: false
+				});
+				var pointcloud = new THREE.Points(geometry, material);
+				return pointcloud;
+			}
+
+			function init() {
+				var container = document.getElementById('container');
+
+				scene = new THREE.Scene();
+
+				clock = new THREE.Clock();
+
+				const near_plane = 2;
+				const far_plane = 100;
+
+				// Set up camera and scene
+				camera = new THREE.PerspectiveCamera(
+				    20,
+				    renderWidth / renderHeight,
+				    near_plane,
+				    far_plane
+				);
+
+				camera.applyMatrix( new THREE.Matrix4().makeTranslation( 0,0,40 ) );
+
+				let jsonData = getData("umap", "mfcc", 2, 2);
+				var pcBuffer = generatePointcloud(jsonData);
+				pcBuffer.scale.set(10, 10, 1);
+				pcBuffer.position.set(0, 0, 0);
+				scene.add( pcBuffer );
+
+				pointclouds = [ pcBuffer ];
+
+				//
+
+				var sphereGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+				var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+
+				for ( var i = 0; i < 40; i++ ) {
+
+					var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+					scene.add( sphere );
+					spheres.push( sphere );
+
+				}
+
+				//
+				renderWidth = window.innerWidth - drawerWidth;
+				renderHeight = window.innerHeight - titleHeight;
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio(window.devicePixelRatio);
+				renderer.setClearColor(0x000000, 1);
+				renderer.setSize(renderWidth, renderHeight);
+				container.appendChild(renderer.domElement);
+				controls = new THREE.OrbitControls( camera,  renderer.domElement);
+				controls.enableDamping = true;
+				controls.enableRotate = true;
+				controls.enabledZoom = true;
+				controls.mouseButtons = {
+						ORBIT: THREE.MOUSE.LEFT,
+						ZOOM: THREE.MOUSE.MIDDLE,
+						PAN: THREE.MOUSE.RIGHT
+					}
+
+			//
+
+				raycaster = new THREE.Raycaster();
+				raycaster.params.Points.threshold = threshold;
+
+				//
+
+				//stats = new Stats();
+				//container.appendChild( stats.dom );
+
+				///////////
+				// VIDEO //
+				///////////
+				//set JS variable from div tag:
+				video = document.getElementById( 'myVideo' );
+				video.src = "";
+				video.muted = true;
+				video.load(); // must call after setting/changing source
+				video.play();
+				// // //
+
+				window.addEventListener( 'resize', onWindowResize, false );
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				renderer.domElement.addEventListener("dblclick", ondblclick, false)
+			}
+
+			function onDocumentMouseMove( event ) {
+				mouseHasMoved = true;
+
+				titleHeight = document.getElementById("header").clientHeight;
+
+				if (window.innerWidth >= 1024) {
+					drawerWidth = document.getElementById("drawer").clientWidth;
+					mouse.x = ( (event.clientX - drawerWidth) / renderWidth ) * 2 - 1;
+				} else {
+					mouse.x = ( event.clientX /renderWidth ) * 2 - 1;
+				}
+				mouse.y = - ( (event.clientY - titleHeight) / (renderHeight)) * 2 + 1;
+			}
+
+			function onWindowResize() {
+
+				renderWidth = window.innerWidth - drawerWidth;
+				renderHeight = window.innerHeight - titleHeight;
+
+				camera.aspect = renderWidth / renderHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( renderWidth, renderHeight );
+
+			}
+
+			function animate() {
+				requestAnimationFrame(animate);
+				controls.update();
+
+				if (interpolating) {
+					pointclouds[0].geometry.attributes.position.needsUpdate = true;
+
+					var positions = pointclouds[0].geometry.attributes.position.array;
+
+					interpolatingAmount += interpolationSpeed;
+
+					if (interpolatingAmount >= 1.0) {
+						interpolating = false;
+
+						for (var i = 0; i < positions.length; ++i) {
+							positions[i] = target[i];
+						}
+					} else {
+
+						for (var i = 0; i < positions.length; i += 3) {
+							positions[i] = THREE.Math.lerp(positions[i], target[i], interpolatingAmount);
+							positions[i+1] = THREE.Math.lerp(positions[i+1], target[i+1], interpolatingAmount);
+						}
+					}
+				}
+				render();
+				updateVideo();
+				//stats.update();
+
+			}
+
+			function updateVideo()
+			{
+				video.style.display = showVideo ? "block" : "none";
+
+				if ( keyboard.pressed("space") && showVideo )
+					showVideo = false;
+
+				if ( keyboard.pressed("v") && showVideo ) {
+					showVideo = true;
+					video.style.paddingTop = "25%";
+					video.style.paddingBottom = "0%";
+				}
+
+				if ( keyboard.pressed("x") ) {
+					video.style.paddingTop = "0%";
+					video.style.paddingBottom = "100%";
+				}
+
+				if ( keyboard.pressed("r") ) // rewind video
+				video.currentTime = 0;
+
+			}
+
+			var toggle = 0;
+
+			function render() {
+
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersections = raycaster.intersectObjects( pointclouds );
+				intersection = (intersections.length) > 0  ? intersections[0] : null;
+
+				if (toggle > 0.04 && intersection !== null && mouseHasMoved) {
+
+					if (previousSampleIndex != intersection.index) {
+						let filepath = filePaths[intersection.index];
+						// let performerName = performerNames[intersection.index];
+						previousSampleIndex = intersection.index;
+
+						var videoFile = filepath + ".mp4";
+						video.currentTime = 0;
+						video.pause();
+						// video.src = videoType == "mfcc" ? "video/raw/" + videoFile : "video/" + videoFile;
+						video.src = "video/" + videoFile;
+						video.load();
+						video.play();
+
+						document.getElementById("filename").innerHTML = filepath;
+					}
+					if( keyboard.pressed("c") )
+						controls.target = (intersection.point)
+
+					spheres[spheresIndex].position.copy(intersection.point);
+					spheres[spheresIndex].scale.set(0.2, 0.2, 0.2);
+					spheresIndex = (spheresIndex + 1) % spheres.length;
+
+					toggle = 0;
+
+				}
+
+				for (var i = 0; i < spheres.length; i++) {
+
+					var sphere = spheres[i];
+					sphere.scale.multiplyScalar(0.98);
+					sphere.scale.clampScalar(0.01, 1);
+
+				}
+
+				toggle += clock.getDelta();
+
+				renderer.render(scene, camera);
+
+			}
+
+			function ondblclick(event) {
+			}
+
+		</script>
+<br></br>
+	</body>
+
+</html>

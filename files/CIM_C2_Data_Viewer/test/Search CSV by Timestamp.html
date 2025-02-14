@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Timestamp Search</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 20px; }
+        input, button { margin: 10px; padding: 8px; font-size: 16px; }
+        #output { margin-top: 20px; font-weight: bold; font-size: 18px; color: #333; }
+        video { margin-top: 20px; max-width: 80%; }
+    </style>
+</head>
+<body>
+
+    <h2>Live Video Timestamp Search</h2>
+
+    <input type="file" id="csvFileInput" accept=".csv">
+    <br>
+    <input type="file" id="videoFileInput" accept="video/*">
+    <br>
+    <video id="videoPlayer" controls>
+        Your browser does not support the video tag.
+    </video>
+
+    <p id="output">Text will appear here...</p>
+
+    <script>
+        let entries = []; // Stores parsed CSV data
+
+        // Load CSV file
+        document.getElementById('csvFileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csvText = e.target.result;
+                entries = parseCSV(csvText);
+                alert("CSV Loaded Successfully!");
+            };
+            reader.readAsText(file);
+        });
+
+        // Load video file
+        document.getElementById('videoFileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const videoURL = URL.createObjectURL(file);
+            document.getElementById('videoPlayer').src = videoURL;
+        });
+
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split("\n");
+            const headers = lines.shift().split(",");
+            console.log(lines)
+            console.log(headers)
+
+            return lines.map(line => {
+                const values = line.split(",");
+                return {
+                    [headers[0].trim()]: values[0].trim(),
+                    [headers[1].trim()]: values[1].trim()
+                };
+            });
+        }
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        function updateText() {
+            const video = document.getElementById("videoPlayer");
+            const currentTime = formatTime(video.currentTime);
+            console.log(currentTime)
+
+            const entry = entries.find(e => e.timestamp === currentTime);
+            document.getElementById("output").textContent = entry ? entry.text : "No entry found for this timestamp.";
+        }
+
+        // Update text every second
+        setInterval(updateText, 1000); // 1000ms = 1 second
+    </script>
+
+</body>
+</html>
