@@ -189,7 +189,7 @@ const sessions = ['s1_SHE', 's1_HE', 's2_HE', 's2_SHE', 's3_SHE', 's3_HE', 's4_H
 const offset_take1_2_3 = [[35.255, 208.39499999999998, 375.365], [25.365, 172.235, 328.295], [57.255, 303.33500000000004, 514.325], [37.325, 257.225, 473.41499999999996, 743.2750000000001], [60.335, 313.325, 477.375], [52.405, 567.2149999999999, 822.365], [56.195, 230.255, 555.235], [194.245, 390.225, 545.255], [285.245, 457.195, 692.175], [76.245, 408.40500000000003, 614.395], [96.195, 304.255, 454.34499999999997], [34.345, 180.395, 520.335]]
 
 var currentSessionID = 0
-var currentSession = sessions[10]
+var currentSession = sessions[0]
 
 const keys = [
 	"ts",
@@ -253,7 +253,7 @@ const videoFiles = sessions.map((session, index) => ({
 		file5: sensorVideoDir_EDA + sensorVideoFiles[index] // Use the file name as the file path
 }));
 
-var currentSession = sessions[0]
+// var currentSession = sessions[0]
 // const offset_take1 = [35.255, 25.365, 57.255, 37.325, 60.335, 52.405, 56.195, 194.245, 285.245, 76.245, 96.195, 34.345];
 // const offset_take1_2_3 = [[35.255, 208.39499999999998, 375.365], [25.365, 172.235, 328.295], [57.255, 303.33500000000004, 514.325], [37.325, 257.225, 473.41499999999996, 743.2750000000001], [60.335, 313.325, 477.375], [52.405, 567.2149999999999, 822.365], [56.195, 230.255, 555.235], [194.245, 390.225, 545.255], [285.245, 457.195, 692.175], [76.245, 408.40500000000003, 614.395], [96.195, 304.255, 454.34499999999997], [34.345, 180.395, 520.335]]
 // Get references to the dropdown and video player
@@ -348,12 +348,39 @@ function timeToSeconds(time) {
 	return time.startsWith("-") ? -totalSeconds : totalSeconds; // Reapply negativity if needed
 }
 
+function getTakeIndex(currentTime) {
+    // If currentTime is before the first take, return index 0
+		currentSessionID = sessions.findIndex(element => element === currentSession)
+		let endTimeStamps = offset_take1_2_3[currentSessionID].map(num => num + timeToSeconds(entries.video_time_stamp.at(-1)));
+		let startTimeStamps = offset_take1_2_3[currentSessionID]
+    if (currentTime < startTimeStamps[0]) {
+        return 0;
+    }
+    // Check if currentTime is inside any take interval
+    const index = startTimeStamps.findIndex((start, i) =>
+        currentTime >= start && currentTime <= endTimeStamps[i]
+    );
+    if (index !== -1) return index; // Return the index if inside a take
+    // Check if currentTime is in a gap between two takes
+    for (let i = 0; i < startTimeStamps.length - 1; i++) {
+        if (currentTime > endTimeStamps[i] && currentTime < startTimeStamps[i + 1]) {
+            return i + 1; // Set index to the next take
+        }
+    }
+    // If currentTime is beyond all takes, return the last take index
+    return startTimeStamps.length - 1;
+}
 
 function updateText() {
 		// const currentTime = formatTime(video.currentTime);
 		const currentTime = video.currentTime;
 		currentSessionID = sessions.findIndex(element => element === currentSession)
-		let currentTake = offset_take1_2_3[currentSessionID].findLastIndex(takeTime => currentTime >= takeTime);
+		// let endTimeStamps = offset_take1_2_3[currentSessionID].map(num => num + timeToSeconds(entries.video_time_stamp.at(-1)));
+		// let currentTake = endTimeStamps.findLastIndex(end => currentTime < end && currentTime >= );
+
+		let currentTake = getTakeIndex(currentTime)
+
+		// let endTimeStamps = offset_take1_2_3[currentSessionID].at(-1) + timeToSeconds(entries.video_time_stamp.at(-1))
 		console.log(currentTake)
 
 		offset_seconds = offset_take1_2_3[currentSessionID][currentTake];
@@ -376,7 +403,7 @@ function updateText() {
 		})
 
 		// console.log(entry)
-		document.getElementById("output").innerHTML = entries["Thoughts"][currentIndex] ? entry : ".";
+		document.getElementById("output").innerHTML = currentSessionID == 11 && currentTake == 2 ? entry : ".";
 }
 
 const video = document.getElementById('videoPlayer');
