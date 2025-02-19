@@ -131,7 +131,7 @@
 	<script src="https://getfirebug.com/firebug-lite-debug.js"></script> -->
 	<script src="mediagroup.js"></script>
 	<!-- JSON HERE -->
-	<script type="text/javascript" src="MPI_DOP6.json"></script>
+	<script type="text/javascript" src="MPI_DOP_1_6.json"></script>
 	</head>
 
 <body onload=loadJSON()>
@@ -188,6 +188,17 @@
 const sessions = ['s1_SHE', 's1_HE', 's2_HE', 's2_SHE', 's3_SHE', 's3_HE', 's4_HE', 's4_SHE', 's5_SHE', 's5_HE', 's6_HE', 's6_SHE']
 const offset_take1_2_3 = [[35.255, 208.39499999999998, 375.365], [25.365, 172.235, 328.295], [57.255, 303.33500000000004, 514.325], [37.325, 257.225, 473.41499999999996, 743.2750000000001], [60.335, 313.325, 477.375], [52.405, 567.2149999999999, 822.365], [56.195, 230.255, 555.235], [194.245, 390.225, 545.255], [285.245, 457.195, 692.175], [76.245, 408.40500000000003, 614.395], [96.195, 304.255, 454.34499999999997], [34.345, 180.395, 520.335]]
 
+film_durations = [73.962667, 84.629333, 77.589333, 70.912000, 69.760000, 64.640000,
+  83.520000, 84.352000, 86.357333, 97.664000, 110.357333, 114.517333,
+  113.344000, 59.626667, 63.594667, 68.906667, 59.840000, 60.906667,
+  62.442667, 69.077333, 74.880000, 74.474667, 88.384000, 77.120000,
+  66.026667, 68.714667, 74.837333, 70.037333, 72.064000, 64.832000,
+  59.349333, 104.704000, 70.869333, 75.669333, 86.272000, 124.842667,
+  80.597333]
+
+sessionDurations = Object.fromEntries(sessions.map((session, index) => [session, film_durations[index]]));
+
+
 var currentSessionID = 0
 var currentSession = sessions[0]
 
@@ -201,6 +212,7 @@ const keys = [
 	"Body actions, sensations, events",
 	"Actions"
 ];
+
 const textIndexes = [1, 3, 4, 5, 6];
 
 let entries = {}; // Stores parsed CSV data
@@ -351,7 +363,8 @@ function timeToSeconds(time) {
 function getTakeIndex(currentTime) {
     // If currentTime is before the first take, return index 0
 		currentSessionID = sessions.findIndex(element => element === currentSession)
-		let endTimeStamps = offset_take1_2_3[currentSessionID].map(num => num + timeToSeconds(entries.video_time_stamp.at(-1)));
+		let endTimeStamps = offset_take1_2_3[currentSessionID].map(num => num + sessionDurations[currentSession] + 5);
+		// console.log(endTimeStamps)
 		let startTimeStamps = offset_take1_2_3[currentSessionID]
     if (currentTime < startTimeStamps[0]) {
         return 0;
@@ -372,43 +385,41 @@ function getTakeIndex(currentTime) {
 }
 
 function updateText() {
-		// const currentTime = formatTime(video.currentTime);
 		const currentTime = video.currentTime;
 		currentSessionID = sessions.findIndex(element => element === currentSession)
-		// let endTimeStamps = offset_take1_2_3[currentSessionID].map(num => num + timeToSeconds(entries.video_time_stamp.at(-1)));
-		// let currentTake = endTimeStamps.findLastIndex(end => currentTime < end && currentTime >= );
 
 		let currentTake = getTakeIndex(currentTime)
 
-		// let endTimeStamps = offset_take1_2_3[currentSessionID].at(-1) + timeToSeconds(entries.video_time_stamp.at(-1))
 		console.log(currentTake)
 
 		offset_seconds = offset_take1_2_3[currentSessionID][currentTake];
 		const x = currentTime;
 
-		const filteredIndexes = entries.video_time_stamp
+		const filteredIndexes = entries[currentSession].video_time_stamp
 			.map((time, index) => ({ time, index }))  // Map each time to its index
 			.filter(({ time }) => (timeToSeconds(time)+offset_seconds) < x)  // Filter based on timeToSeconds
 			.map(({ index }) => index);  // Extract the indexes from the filtered result
 
 		currentIndex = filteredIndexes.at(-1)
+		// console.log(entries[currentSession].video_time_stamp)
 
 		const selectedValues = textIndexes.map(index => data[index]);
 
 		let entry = ""
 		let textKeys = textIndexes.map(index => keys[index]);
 		textKeys.forEach((key, index) => {
-			// console.log(key)
-			entry += "<b>"+key+": </b>"+entries[key][currentIndex] + "<br>"
+			entry += "<b>"+key+": </b>"+entries[currentSession][key][currentIndex] + "<br>"
 		})
 
-		// console.log(entry)
-		document.getElementById("output").innerHTML = currentSessionID == 11 && currentTake == 2 ? entry : ".";
+		firstTextTimestamp = offset_take1_2_3[currentSessionID][currentTake] + timeToSeconds(entries[currentSession]["video_time_stamp"][0])
+		document.getElementById("output").innerHTML = x > firstTextTimestamp && currentTake == importantTakes[currentSession] ? entry : ".";
 }
 
 const video = document.getElementById('videoPlayer');
 video.addEventListener("timeupdate", () => {
-		updateText(); // Display time with 2 decimal places
+		if (entries[currentSession]) {
+			updateText(); // Display time with 2 decimal places
+		}
 });
 
 function seek(seconds) {
@@ -416,15 +427,14 @@ function seek(seconds) {
 }
 
 function loadJSON() {
-				keys.forEach((key, index) => {
-					entries[key] = data[index].slice(1);
+				importantSessions = Object.keys(data);
+				importantSessions.forEach(sessionTemp => {
+  				entries[sessionTemp] = {}; // Initialize each session key as an object
+					keys.forEach((key, index) => {
+						entries[sessionTemp][key] = data[sessionTemp][index].slice(1); // Slice(1) logic applied per column
+					});
 				});
-
-				// var div = document.getElementById('output');
-				// for(var i = 0;i < entries["video_time_stamp"].length; i++)
-				// {
-				//     div.innerHTML = div.innerHTML + "<p class='inner' id="+i+">"+ entries["video_time_stamp"][i] +"</p>" + "<br>";
-				// }
+				// console.log(entries)
 		}
 
 </script>
