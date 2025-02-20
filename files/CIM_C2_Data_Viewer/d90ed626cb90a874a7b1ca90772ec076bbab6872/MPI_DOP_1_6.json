@@ -611,7 +611,7 @@ data =
   "s5_SHE": [
     [
         "Timestamp",
-        "-01:00 - minus 33s",
+        "-00:59 - minus 33s",
         "-00:33 - minus 11s",
         "-00:11 - 00:01",
         "00:01 - 00:05",
@@ -629,8 +629,8 @@ data =
         "Mentally preparing for the shoot, after take 2",
         "(Clapboard part)",
         "Getting into position - Impulse of changing the starting frame",
-        "Trying to be with actress' impulses",
-        "'Sneakily' getting closer to the actress",
+        "Trying to be with actress- impulses",
+        "-Sneakily- getting closer to the actress",
         "Being in sync with actress moving to window",
         "Getting him in",
         "Following him picking up the shoes",
@@ -660,21 +660,6 @@ data =
         "-",
         "-",
         "-",
-        "-",
-        "-",
-        "-",
-        "-",
-        "-",
-        "-",
-        "-",
-        "-"
-    ],
-    [
-        "Other mental processes / states",
-        "Going through the shot in my head, understanding that someone looking at it might not get all the information happening that could be needed to tell the story\nThinking I am not telling the full story with that shot\nThinking maybe his entrance is needed to tell the full story\nThinking about how the shot would be seen\nThinking about what is actually happening\nThinking about what story I am telling with the images\nVisually seeing it in front of me = thinking, not separated\nWondering how to get it but still stay close\nFiguring out when to get him in, planning that.\nOnly thinking about scene [not actively aware of surroundings]\nRunning out of things to think",
-        "-",
-        "-",
-        "-",
         "Thinking ahead, when to do what, where is my balance? When should I be ready to do the pan?",
         "-",
         "-",
@@ -685,67 +670,10 @@ data =
         "Wanting to see what will happen so composing a bit more of him in"
     ],
     [
-        "Feelings / emotions",
+        "Other mental processes / states",
         "Feeling I am missing something - his entry\nFeeling like emotionally, it was there\nBut story-telling wise, we are missing his entry\nSeeing in head is connected to places I am looking at\nPhysical points in studio I have seen are connected with memory of shooting it\nMentally being there in that moment, like a collection of attention points and maybe some beats. Moments in time that were concentrated on by the frame that I chose or want to choose.\nIntending to get those moments.\nNot actively aware of surroundings [only thinking about the scene]\nRunning out of things to think\n",
         "-",
-        "Not sure about how I filmed the legs last time\nImpulse [not fully thinking]: \"\"Let's not do the feet thing, let's try it in a normal way again\"",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-    ],
-    [
-        "Feeling I need to do this thing differently again",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-    ],
-    [
-        "Feeling of an impulse that pushes me somewhere else",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-    ],
-    [
-        "Feeling of unease",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-    ],
-    [
-        "\"This I have already done, maybe there is something better here\"\" [not full thinking]\nA continuation of a search, focusing on the floor or not.",
+        "Not sure about how I filmed the legs last time\nImpulse [not fully thinking]: -Let's not do the feet thing, let's try it in a normal way again-\nFeeling I need to do this thing differently again\nFeeling of an impulse that pushes me somewhere else\nFeeling of unease\n-This I have already done, maybe there is something better here- [not full thinking]\nA continuation of a search, focusing on the floor or not.",
         "Understanding that the position the frame shows is too far away [connected to lens choice - not being adapted to that]",
         "Stayed wider than I wanted\nHere I feel closeup is better: something is going on in the eyes [which I saw during rehearsals already], this conflict, dread, thinking - I saw her thoughts forming and changing\nWanting to get closer to create same impact as on take 2\nConflicting choices [always]: Wanting to get the shot I want, while doing it in a way that does not show the camera\nKnowing if I want to get closer, I have to do it sneakily\nGetting ready for her moving towards the window\nKnowing when she arrives, I need to be ready for him\nKnowing I have to step back to get him in once she has moved to the window.\nSome planning for it becoming more technical after she leaves as I will not be focused on minute eye movements anymore, but rather following the action.\nGetting ready is trying not to sleep, to be fast reacting and move in sync with or slightly later than actors",
         "Be awake as much as possible",
@@ -754,13 +682,10 @@ data =
         "Realizing this side is not working well for me [her direction doesn't work in dialogue like with his direction]",
         "-",
         "-",
-        "It gave a new feeling\nI am aware of the frame mostly, trying to feel where is the organic way of stopping, where it starts to stay still for my sense.\nKnowing I captured their input.\nFeeling that it is complete for this when calling cut\nI sense the rhythm of the scene and feel it in the frame; feeling the beats, the intensity, and the process in the same way in between those beats [this moment and talking generally.]",
-        "",
-        "",
-        ""
+        "It gave a new feeling\nI am aware of the frame mostly, trying to feel where is the organic way of stopping, where it starts to stay still for my sense.\nKnowing I captured their input.\nFeeling that it is complete for this when calling cut\nI sense the rhythm of the scene and feel it in the frame; feeling the beats, the intensity, and the process in the same way in between those beats [this moment and talking generally.]"
     ],
     [
-        "Body actions, sensations, events",
+        "Feelings / emotions",
         "Feeling happy about her performance during previous take\nFeeling of let's do it!\n",
         "-",
         "-",
@@ -775,7 +700,7 @@ data =
         "It gave a new feeling"
     ],
     [
-        "Actions (decisive, filming)",
+        "Body actions, sensations, events",
         "Seeing it in front of me is located in the head",
         "-",
         "-",
@@ -790,7 +715,7 @@ data =
         "-"
     ],
     [
-        "-",
+        "Actions (decisive, filming)",
         "-",
         "-",
         "Deciding to change the starting frame, finding a new position where you feel more comfortable",
@@ -804,7 +729,7 @@ data =
         "Trying to keep the assignment [although I would like to end with her closeup]\nTaking a very cut-off two shot of him [as she is the main character in the shot]\n[very conscious decision from her first take onwards to focus on her mostly but also keep him in, but the latter only because it was the assignment]",
         "Going a bit wider to show him a tiny bit more\nTo show the beat better, but still focus on her\nI capture their input"
     ]
-  ],
+],
   "s6_SHE": [
     [
       "Timestamp",

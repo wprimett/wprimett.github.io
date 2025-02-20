@@ -99,9 +99,9 @@
 			/* top: 50%; */
 			/* transform: translateY(-50%); */
 	}
-	/* button{
-		right:40px;
-	} */
+	button{
+		background-color: #DDD;
+	}
 
 	input:checked + .slider {
 	  background-color: #2196F3;
@@ -137,10 +137,10 @@
 <body onload=loadJSON()>
 	<select id="myDropdown" style="margin-right: 20px;width:100%"></select>
 	<br></br>
-	<button onclick="jumpTo(0)">Take 1</button>
-	<button onclick="jumpTo(1)">Take 2</button>
-	<button onclick="jumpTo(2)">Take 3</button>
-	<button id="extraTake" onclick="jumpTo(3)" style="display: none">Take 4*</button>
+	<button id="Take 1" onclick="jumpTo(0)">Take 1</button>
+	<button id="Take 2" onclick="jumpTo(1)">Take 2</button>
+	<button id="Take 3" onclick="jumpTo(2)">Take 3</button>
+	<button id="Take 4" onclick="jumpTo(3)" style="display: none">Take 4*</button>
 
  	<!-- <div class="scrubber-container"> -->
 		<button onclick="seek(-1)">← Back</button>
@@ -211,10 +211,10 @@ const keys = [
 	"Other mental processes / states",
 	"Feelings / emotions",
 	"Body actions, sensations, events",
-	"Actions"
+	"Actions (decisive, filming)"
 ];
 
-const textIndexes = [1, 3, 4, 5, 6];
+const textIndexes = [1, 3, 4, 5, 6, 7];
 
 let entries = {}; // Stores parsed CSV data
 
@@ -308,7 +308,12 @@ dropdown.addEventListener("change", (event) => {
 		currentSessionID = sessions.findIndex(element => element === currentSession)
 
 		numTakes = offset_take1_2_3[sessions.findIndex(element => element === currentSession)].length
-		document.getElementById("extraTake").style.display = numTakes > 3 ? "" : "none";
+		document.getElementById("Take 4").style.display = numTakes > 3 ? "" : "none";
+
+		[1, 2, 3, 4].forEach(i => document.getElementById("Take " + i).style.backgroundColor = "#DDD");
+		if (importantTakes[currentSession]){
+			document.getElementById("Take " + importantTakes[currentSession]).style.backgroundColor = "green";
+		}
 
 		videoSource.src = selectedFile[2]; // Update the video source
 		videoPlayer.load(); // Reload the video player
@@ -421,13 +426,13 @@ function updateText() {
 
 		firstTextTimestamp = offset_take1_2_3[currentSessionID][currentTake] + timeToSeconds(entries[currentSession]["video_time_stamp"][0])
 		// document.getElementById("output").innerHTML = x > firstTextTimestamp && currentTake == (importantTakes[currentSession]-1) ? entry : ".";
-		console.log(currentTake == (importantTakes[currentSession]-1))
-		// console.log(entry)
-		console.log(x)
-		console.log(firstTextTimestamp)
-		console.log(x > firstTextTimestamp)
 		document.getElementById("output").innerHTML = x > firstTextTimestamp && currentTake == (importantTakes[currentSession]-1) ? entry : ".";
 }
+
+// Trigger the change event on page load
+window.addEventListener("DOMContentLoaded", () => {
+    dropdown.dispatchEvent(new Event("change"));
+});
 
 const video = document.getElementById('videoPlayer');
 video.addEventListener("timeupdate", () => {
