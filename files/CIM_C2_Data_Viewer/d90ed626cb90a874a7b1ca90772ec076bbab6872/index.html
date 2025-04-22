@@ -303,8 +303,8 @@ videoFiles.forEach(video => {
 dropdown.addEventListener("change", (event) => {
 		var selectedFile = event.target.value.split(","); // Get the selected file
 		currentSession = selectedFile[0];
-		console.log(currentSession);
-		console.log(selectedFile)
+		// console.log(currentSession);
+		// console.log(selectedFile);
 		currentSessionID = sessions.findIndex(element => element === currentSession)
 
 		numTakes = offset_take1_2_3[sessions.findIndex(element => element === currentSession)].length
@@ -314,7 +314,6 @@ dropdown.addEventListener("change", (event) => {
 		if (importantTakes[currentSession]){
 			document.getElementById("Take " + importantTakes[currentSession]).style.backgroundColor = "green";
 		}
-
 		videoSource.src = selectedFile[2]; // Update the video source
 		videoPlayer.load(); // Reload the video player
 
