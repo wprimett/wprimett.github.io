@@ -1,6 +1,22 @@
-		<a class="logo" href="index.html">Primett</a>
-		<nav class="float-right">
-			<a href='index.html'><u>Projects</u></a> <a href='archive.html'>Talks</a> <a href='teaching.html'>Teaching</a>
-			<ul>
-			</ul>
-		</nav>
+<a class="logo" href="index.html">Primett</a>
+<nav class="float-right" id="main-nav">
+    <a href='index.html'>Projects</a> 
+    <a href='archive.html'>Talks</a> 
+    <a href='teaching.html'>Teaching</a>
+    <ul></ul>
+</nav>
+
+<script>
+    const currentPage = window.location.pathname.split("/").pop();
+    
+    const navLinks = document.querySelectorAll('#main-nav a');
+
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.style.textDecoration = 'underline';
+        }
+        else if ((currentPage === "" || currentPage === "index.html") && link.getAttribute('href') === "index.html") {
+            link.style.textDecoration = 'underline';
+        }
+    });
+</script>
