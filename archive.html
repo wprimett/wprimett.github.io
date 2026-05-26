@@ -12,12 +12,14 @@
 <body>
 <div class="container">
 	<header>
-		<a class="logo" href="index.html">W. Primett</a>
-		<nav class="float-right">
-			<a href='index.html'>Projects</a> <a href=''><u>Talks</u></a>
-			<ul>
-			</ul>
-		</nav>
+		<div id="navigation-container"></div>
+        <script>
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navigation-container').innerHTML = data;
+                });
+        </script>
 	</header>
 
 		<div class="row">
