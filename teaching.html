@@ -13,48 +13,36 @@
 	<meta name="description" content="W. Primett - Interaction Designer & Researcher.">
 
 	<link href="minimal.css" rel="stylesheet">
-
 </head>
 <body>
 <div class="container">
 	<header>
 		<div id="navigation-container"></div>
-        <script>
-            fetch('header.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('navigation-container').innerHTML = data;
-                });
-        </script>
+		<script>
+			fetch('header.html')
+				.then(response => response.text())
+				.then(data => {
+					document.getElementById('navigation-container').innerHTML = data;
+				});
+		</script>
 	</header>
+
 	<div class="row">
 		<div class="col-8">
-	<!-- Sound Circuits -->
-<h3>Ubiqitous Movement Sensing</h3>
-<iframe src="https://www.youtube.com/embed/lGujJEYYTBA?si=VW8UXyPjijoeLaoM" frameborder="0" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-<p><a href="https://www.tlu.ee/en/dt/mediahub/blogs/exploring-future-movement-through-technology-ubiquitous-movement-sensing-tallinn">Course info</a>
-<p><b>In December 2024, Tallinn University hosted the Erasmus BIP (Blended Intensive Programme) titled Ubiquitous Movement Sensing, offering students a unique 
-	opportunity to dive into the world of embodied sensing and movement analysis. Over the course of five days, from December 16 to 20, students from across 
-	Europe came together to engage in an intensive course that combined theory, practice, and hands-on experience in the fascinating field of movement tracking.</p>
-
-			</div>
-		
-			<div class="col-4">
-        <div id="sidebar-container"></div>
-        <script>
-            fetch('side_panel.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('sidebar-container').innerHTML = data;
-                });
-        </script>
-		</div><!-- col-8 -->
-	</div><!-- row -->
-
-
-	<footer>
-			&copy; w. primett
-	</footer><!-- footer -->
-</div>
-</body>
+			<h3>Ubiqitous Movement Sensing</h3>
+			<iframe src="https://www.youtube.com/embed/lGujJEYYTBA?si=VW8UXyPjijoeLaoM" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+			<p><a href="https://www.tlu.ee/en/dt/mediahub/blogs/exploring-future-movement-through-technology-ubiquitous-movement-sensing-tallinn">Course info</a></p>
+			<p><b>In December 2024, Tallinn University hosted the Erasmus BIP (Blended Intensive Programme) titled Ubiquitous Movement Sensing, offering students a unique opportunity to dive into the world of embodied sensing and movement analysis. Over the course of five days, from December 16 to 20, students from across Europe came together to engage in an intensive course that combined theory, practice, and hands-on experience in the fascinating field of movement tracking.</b></p>
+		</div><div class="col-4">
+			<div id="sidebar-container"></div>
+			<script>
+				fetch('side_panel.html')
+					.then(response => response.text())
+					.then(data => {
+						document.getElementById('sidebar-container').innerHTML = data;
+					});
+			</script>
+		</div></div><footer>
+		&copy; w. primett
+	</footer></div></body>
 </html>
