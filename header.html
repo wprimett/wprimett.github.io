@@ -7,16 +7,22 @@
 </nav>
 
 <script>
-    const currentPage = window.location.pathname.split("/").pop();
+    // const currentPage = window.location.pathname.split("/").pop();
     
     const navLinks = document.querySelectorAll('#main-nav a');
 
     navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
+        if (link.getAttribute('href') == window.location.pathname.split("/").pop()){
             link.style.textDecoration = 'underline';
-        }
-        else if ((currentPage === "" || currentPage === "index.html") && link.getAttribute('href') === "index.html") {
-            link.style.textDecoration = 'underline';
+            console.log(link.getAttribute('href'))
         }
     });
+    // navLinks.forEach(link => {
+    //     if (link.getAttribute('href') === currentPage) {
+    //         link.style.textDecoration = 'underline';
+    //     }
+    //     else if ((currentPage === "" || currentPage === "index.html") && link.getAttribute('href') === "index.html") {
+    //         link.style.textDecoration = 'underline';
+    //     }
+    // });
 </script>
