@@ -43,12 +43,45 @@
   <div class="videos">
     <div class="video-item">
       <!--<label>UNM2027-2.mov</label>-->
-      <video controls>
-        <source src="https://ocorporeal.ut.ee/press/UNM-2027/UNM2027-4.mp4" type="video/quicktime">
-        <source src="https://ocorporeal.ut.ee/press/UNM-2027/UNM2027-4.mp4" type="video/mp4">
+      <video id="my-video" controls>
+
+        <source id="video-source" src="https://ocorporeal.ut.ee/press/UNM-2027/UNM2027-4.mp4" type="video/mp4">
         Your browser does not support this video format.
       </video>
     </div>
   </div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    // 1. Get the query parameters from the current URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoKey = urlParams.get('videoID'); // Looks for '?video=something'
+
+    // 2. Define your video library map
+    const videoMap = {
+        '1': 'https://ocorporeal.ut.ee/press/UNM-2027/UNM2027-4.mp4', // Example clip 1
+        '2': 'https://ocorporeal.ut.ee/press/UNM-2027/UNM2027-3.mov',    // Example clip 2
+        '3': 'https://ocorporeal.ut.ee/press/UNM-2027/UNM2027-2.mov'
+    };
+
+    // 3. Grab the video and source elements
+    const videoElement = document.getElementById('my-video');
+    const sourceElement = document.getElementById('video-source');
+
+    // 4. If the URL parameter matches a video in our map, change it
+    if (videoKey && videoMap[videoKey]) {
+        sourceElement.src = videoMap[videoKey];
+        
+        // Crucial: Tell the video element to reload the new source
+        videoElement.load(); 
+        
+        // Optional: Auto-play the new video
+        // videoElement.play().catch(err => console.log("Autoplay blocked by browser"));
+    }
+});
+
+</script>
 </body>
 </html>
+
+
